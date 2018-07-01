@@ -5,7 +5,7 @@ from peewee import fn
 from model import Donation, Donor
 
 app = Flask(__name__)
-#app.secret_key = b'\xf1A\x88f\x1a@6\x1d\xa2\xc8J\xfc\x9e\x9c1\x86p\x04\xc1\xc7\xc7\x03\xfd\xbd'
+# app.secret_key = b'\xf1A\x88f\x1a@6\x1d\xa2\xc8J\xfc\x9e\x9c1\x86p\x04\xc1\xc7\xc7\x03\xfd\xbd'
 app.secret_key = os.environ.get('SECRET_KEY').encode()
 
 
@@ -41,10 +41,12 @@ def create():
 
 @app.route('/report')
 def report():
-    donations = Donation.select(Donation.donor, fn.Count(Donation.value).alias('count'),
-                                fn.Sum(Donation.value).alias('total'),
-                                fn.Avg(Donation.value).alias('average')).group_by(Donation.donor)
+    donations = Donation.select(
+        Donation.donor, fn.Count(Donation.value).alias('count'),
+        fn.Sum(Donation.value).alias('total'),
+        fn.Avg(Donation.value).alias('average')).group_by(Donation.donor)
     return render_template('report.jinja2', donations=donations)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 6738))
