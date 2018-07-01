@@ -25,10 +25,10 @@ def create():
     if request.method == 'POST':
         donor_name = request.form['name']
         donation_amt = int(request.form['amount'])
-        query = Donor.select().where(Donor.name == donor_name)
+        find_donor = Donor.select().where(Donor.name == donor_name)
 
-        if query.exists():
-            Donation(donor=query.get(), value=donation_amt).save()
+        if find_donor.exists():
+            Donation(donor=find_donor.get(), value=donation_amt).save()
             return redirect(url_for('all'))
         else:
             new_donor = Donor(name=donor_name)
